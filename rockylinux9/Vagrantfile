@@ -1,0 +1,34 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |global|
+  global.vm.synced_folder '.', '/vagrant', type: 'nfs'
+  global.ssh.username = 'vagrant'
+  global.ssh.password = 'vagrant'
+  global.ssh.insert_key = 'true'
+
+  global.vm.define "rockylinux9" do |config|
+    config.vm.hostname = "rockylinux9"
+    config.vm.network :private_network, ip: "172.16.5.2"
+    config.vm.box = "rockylinux9"
+
+    # Parallels.
+    config.vm.provider :parallels do |p|
+      p.memory = 1024
+      p.cpus = 1
+    end
+
+    # VirtualBox.
+    config.vm.provider :virtualbox do |v|
+      #config.vm.box = "./builds/virtualbox-rockylinux9.box"
+      v.gui = false
+      v.memory = 1024
+      v.cpus = 1
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--ioapic", "on"]
+    end
+
+    config.vm.provision "shell", inline: "echo Hello, World"
+  end
+
+end

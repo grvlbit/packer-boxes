@@ -1,0 +1,28 @@
+name: Validate Packer hcl files
+
+on:
+  - push
+  - pull_request
+env:
+  PRODUCT_VERSION: "latest"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: ${{ env.PRODUCT_VERSION }}
+
+      - name: Run `packer validate`
+        id: validate
+        run: |
+          find . -name "*.pkr.hcl" | while read filename
+          do
+            echo "$filename"; packer validate -syntax-only "$filename"
+          done

@@ -1,0 +1,6 @@
+*/packer_cache/*
+*/output-virtualbox-iso/*
+*.box
+iso/*
+*/.vagrant/*
+.vagrant-token
