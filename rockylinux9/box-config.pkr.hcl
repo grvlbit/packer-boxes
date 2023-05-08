@@ -61,6 +61,15 @@ build {
              "source.parallels-iso.x86_64"
             ]
 
+  provisioner "file" {
+    source = "../shared/install_guest_tools.sh"
+    destination = "/tmp/install_guest_tools.sh"
+  }
+
+  provisioner "shell" {
+    inline = ["sudo chmod u+x /tmp/install_guest_tools.sh && sudo /tmp/install_guest_tools.sh"]
+  }
+
   post-processors {
     post-processor "vagrant" {
       output = "builds/packer_rockylinux9_{{.BuildName}}_{{.Provider}}.box"
